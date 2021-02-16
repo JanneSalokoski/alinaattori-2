@@ -5,6 +5,9 @@
 
 from enum import Enum
 
+import csv
+import sys
+
 
 class Config:
     """Create a data-structure for handling configuration"""
@@ -52,7 +55,32 @@ logger = Logger()
 
 
 def read_input(input_file):
-    logger.log("Testi")
+    """Read a semicolon-delimitered csv input-file into a list"""
+    logger.log("Reading input from file '{}'".format(input_file))
+
+    try:
+        csv_reader = csv.DictReader(
+            open(input_file, "r", encoding="utf-8-sig"),
+            dialect="excel",
+            delimiter=";"
+        )
+
+        data_rows = []
+        for row in csv_reader:
+            data_rows.append(row)
+
+        logger.log("data_rows: {}".format(data_rows), Logger.LogLevel.DEBUG)
+
+    except FileNotFoundError:
+        logger.log(
+            "No such file: '{}'".format(input_file),
+            Logger.LogLevel.ERROR
+        )
+        sys.exit(1)
+
+    except:  # noqa: E722
+        print("Unexpected error", sys.exc_info()[0])
+        raise()
 
 
 def main():
@@ -66,6 +94,8 @@ def main():
     logger.log("Starting Alinaattori 2.0")
 
     request_data = read_input(config.input_file)
+
+    logger.log(request_data, Logger.LogLevel.DEBUG)
 
 
 main()
