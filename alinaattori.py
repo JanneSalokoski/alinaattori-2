@@ -1,6 +1,10 @@
 #!/usr/bin/env python
+#
+# Here we should have some very toplevel documentation about Alinaattori 2.0
+#
 
 from enum import Enum
+
 
 class Logger:
     """A logger class for easier output"""
@@ -12,7 +16,10 @@ class Logger:
         DEBUG = 3   # Log everything, even debug info
 
     def __init__(self, loglevel):
-        self.loglevel = loglevel
+        if isinstance(loglevel, self.LogLevel):
+            self.loglevel = loglevel
+        else:
+            raise TypeError("loglevel must be of type Logger.LogLevel")
 
     def log(self, message, loglevel=LogLevel.LOG):
         if isinstance(loglevel, self.LogLevel):
