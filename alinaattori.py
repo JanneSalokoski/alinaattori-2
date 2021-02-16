@@ -33,7 +33,7 @@ class Logger:
 def main():
     # Initialize Logger with a LogLevel
     # To-do: Get loglevel from user input
-    logger = Logger(Logger.LogLevel.DEBUG);
+    logger = Logger(Logger.LogLevel.DEBUG)
 
     logger.log("Starting Alinaattori 2.0")
 
