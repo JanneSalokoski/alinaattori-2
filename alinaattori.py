@@ -24,9 +24,17 @@ class Logger:
         LOG = 2     # Log all relevant info for standard usage
         DEBUG = 3   # Log everything, even debug info
 
-    def __init__(self, loglevel):
+    def __init__(self):
+        self._loglevel = self.LogLevel.DEBUG
+
+    @property
+    def loglevel(self):
+        return self._loglevel
+
+    @loglevel.setter
+    def loglevel(self, loglevel):
         if isinstance(loglevel, self.LogLevel):
-            self.loglevel = loglevel
+            self._loglevel = loglevel
         else:
             raise TypeError("loglevel must be of type Logger.LogLevel")
 
@@ -39,15 +47,25 @@ class Logger:
             raise TypeError("loglevel must be of type Logger.LogLevel")
 
 
+# Initialize global Logger-class
+logger = Logger()
+
+
+def read_input(input_file):
+    logger.log("Testi")
+
+
 def main():
     # Initialize Config
     # To-do: Get these from user input
     config = Config("input.csv", "output.csv", Logger.LogLevel.DEBUG)
 
     # Initialize Logger with a LogLevel
-    logger = Logger(config.loglevel)
+    logger.loglevel = config.loglevel
 
     logger.log("Starting Alinaattori 2.0")
+
+    request_data = read_input(config.input_file)
 
 
 main()
