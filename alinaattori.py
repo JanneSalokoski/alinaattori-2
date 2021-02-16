@@ -6,6 +6,15 @@
 from enum import Enum
 
 
+class Config:
+    """Create a data-structure for handling configuration"""
+
+    def __init__(self, input_file, output_file, loglevel):
+        self.input_file = input_file
+        self.output_file = output_file
+        self.loglevel = loglevel
+
+
 class Logger:
     """A logger class for easier output"""
 
@@ -31,9 +40,12 @@ class Logger:
 
 
 def main():
+    # Initialize Config
+    # To-do: Get these from user input
+    config = Config("input.csv", "output.csv", Logger.LogLevel.DEBUG)
+
     # Initialize Logger with a LogLevel
-    # To-do: Get loglevel from user input
-    logger = Logger(Logger.LogLevel.DEBUG)
+    logger = Logger(config.loglevel)
 
     logger.log("Starting Alinaattori 2.0")
 
