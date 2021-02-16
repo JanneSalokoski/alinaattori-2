@@ -49,6 +49,21 @@ class Logger:
         else:
             raise TypeError("loglevel must be of type Logger.LogLevel")
 
+class Request:
+    """Create a data-structure for handling requests"""
+
+    def __init__(self, organization, email, requests):
+        self.organization = organization
+        self.email = email
+        self.requests = requests
+
+    def __repr__(self):
+        return "organization: '{}', email: '{}', requests: '{}'".format(
+            self.organization,
+            self.email,
+            self.requests
+        )
+
 
 # Initialize global Logger-class
 logger = Logger()
@@ -70,6 +85,7 @@ def read_input(input_file):
             data_rows.append(row)
 
         logger.log("data_rows: {}".format(data_rows), Logger.LogLevel.DEBUG)
+        return data_rows
 
     except FileNotFoundError:
         logger.log(
@@ -83,6 +99,21 @@ def read_input(input_file):
         raise()
 
 
+def process_raw_request_data(data):
+    """Parse raw request data into a list of Request objects"""
+    requests = []
+
+    for row in data:
+        requests.append(Request(
+            row["organization"],
+            row["email"],
+            [row["1"], row["2"], row["3"]]
+        ))
+
+    logger.log("Requests: {}".format(requests), Logger.LogLevel.DEBUG)
+    return requests
+
+
 def main():
     # Initialize Config
     # To-do: Get these from user input
@@ -93,9 +124,8 @@ def main():
 
     logger.log("Starting Alinaattori 2.0")
 
-    request_data = read_input(config.input_file)
-
-    logger.log(request_data, Logger.LogLevel.DEBUG)
+    raw_request_data = read_input(config.input_file)
+    requests = process_raw_request_data(raw_request_data)
 
 
 main()
