@@ -4,6 +4,7 @@
 #
 
 from enum import Enum
+from datetime import datetime
 
 import random
 import csv
@@ -184,7 +185,7 @@ def process_request(request, reservations):
         request.organization,
         False,
         request.email,
-        "0"
+        "1.1.1970"
     )
 
 
@@ -204,9 +205,10 @@ def print_stdout(reservations):
     logger.log("Reservations: ", start="\n")
 
     for reservation in reservations:
-        logger.log("'{}': '{}'".format(
+        logger.log("'{}': '{}' -> {}".format(
             reservation.organization,
-            reservation.date
+            reservation.date,
+            reservation.status
         ))
 
 
@@ -225,7 +227,7 @@ def print_file(reservations, config):
                 csvwriter.writerow([
                     reservation.organization,
                     reservation.status,
-                    reservation.date
+                    datetime.strptime(reservation.date, "%d.%m.%Y").strftime("%Y-%m-%d")
                 ])
 
         csvfile.close()
@@ -251,7 +253,7 @@ def output_reservations(reservations, config):
 def main():
     # Initialize Config
     # To-do: Get these from user input
-    config = Config("input.csv", "output.csv", Logger.LogLevel.LOG)
+    config = Config("input.csv", "output.csv", Logger.LogLevel.DEBUG)
 
     # Initialize Logger with a LogLevel
     logger.loglevel = config.loglevel
