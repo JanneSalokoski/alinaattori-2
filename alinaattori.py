@@ -49,20 +49,40 @@ class Logger:
         else:
             raise TypeError("loglevel must be of type Logger.LogLevel")
 
+
 class Request:
     """Create a data-structure for handling requests"""
 
-    def __init__(self, organization, email, requests):
+    def __init__(self, organization, email, dates):
         self.organization = organization
         self.email = email
-        self.requests = requests
+        self.dates = dates
 
     def __repr__(self):
-        return "organization: '{}', email: '{}', requests: '{}'".format(
+        return "organization: '{}', email: '{}', dates: '{}'".format(
             self.organization,
             self.email,
-            self.requests
+            self.dates
         )
+
+
+class Reservation:
+    """Create a data-structure for handling reservations"""
+
+    def __init__(self, organization, status, email, date):
+        self.organization = organization
+        self.status = status
+        self.email = email
+        self.date = date
+
+    def __repr__(self):
+        return ("organization: '{}', status: '{}' " +
+                "email: '{}', date: '{}'").format(
+                    self.organization,
+                    "Ok" if self.status is True else "Failed",
+                    self.email,
+                    self.date
+                )
 
 
 # Initialize global Logger-class
@@ -114,6 +134,50 @@ def process_raw_request_data(data):
     return requests
 
 
+def validate_date(date, reservations):
+    """Check if date is found in reserved_dates"""
+    for reservation in reservations:
+        logger.log("{} == {} -> {}".format(
+            date,
+            reservation.date,
+            date == reservation.date
+        ), Logger.LogLevel.DEBUG)
+
+        if date == reservation.date:
+            return False
+
+    return True
+
+
+def process_request(request, reservations):
+    """Validate all dates of a request"""
+    for date in request.dates:
+        if validate_date(date, reservations):
+            return Reservation(
+                request.organization,
+                True,
+                request.email,
+                date
+            )
+
+    return Reservation(
+        request.organization,
+        False,
+        request.email,
+        0
+    )
+
+
+def process_requests(requests):
+    """Validate requests and return reservations"""
+    reservations = []
+    for request in requests:
+        reservations.append(process_request(request, reservations))
+
+    logger.log("Reservations: {}".format(reservations), Logger.LogLevel.DEBUG)
+    return reservations
+
+
 def main():
     # Initialize Config
     # To-do: Get these from user input
@@ -126,6 +190,8 @@ def main():
 
     raw_request_data = read_input(config.input_file)
     requests = process_raw_request_data(raw_request_data)
+
+    reservations = process_requests(requests)
 
 
 main()
