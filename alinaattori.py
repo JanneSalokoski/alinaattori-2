@@ -5,6 +5,7 @@
 
 from enum import Enum
 
+import random
 import csv
 import sys
 
@@ -153,6 +154,12 @@ def validate_date(date, reservations):
     return True
 
 
+def randomize_requests(requests):
+    """Randomize requests list"""
+    logger.log("Randomizing request order", start="\n")
+    random.shuffle(requests)
+
+
 def process_request(request, reservations):
     """Validate all dates of a request"""
     logger.log(
@@ -244,7 +251,7 @@ def output_reservations(reservations, config):
 def main():
     # Initialize Config
     # To-do: Get these from user input
-    config = Config("input.csv", "output.csv", Logger.LogLevel.DEBUG)
+    config = Config("input.csv", "output.csv", Logger.LogLevel.LOG)
 
     # Initialize Logger with a LogLevel
     logger.loglevel = config.loglevel
@@ -254,8 +261,13 @@ def main():
     raw_request_data = read_input(config.input_file)
     requests = process_raw_request_data(raw_request_data)
 
+    randomize_requests(requests)
+
     reservations = process_requests(requests)
 
     output_reservations(reservations, config)
+
+    logger.log("Program finished succesfully", start="\n", end="\n")
+
 
 main()
