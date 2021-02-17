@@ -117,7 +117,7 @@ def read_input(input_file):
 
     except:  # noqa: E722
         print("Unexpected error", sys.exc_info()[0])
-        raise()
+        raise Exception()
 
 
 def process_raw_request_data(data):
@@ -184,7 +184,7 @@ def process_request(request, reservations):
         request.organization,
         False,
         request.email,
-        0
+        "0"
     )
 
 
@@ -218,8 +218,8 @@ def print_file(reservations, config):
     )
 
     try:
-        with open(config.output_file, "w", newline="") as csvfile:
-            csvwriter = csv.writer(csvfile, delimiter=";")
+        with open(config.output_file, "w", newline="", encoding="utf-8-sig") as csvfile:
+            csvwriter = csv.writer(csvfile, delimiter=";", dialect="excel")
             csvwriter.writerow(["organization", "success", "date"])
             for reservation in reservations:
                 csvwriter.writerow([
@@ -239,7 +239,7 @@ def print_file(reservations, config):
 
     except:  # noqa: E722
         print("Unexpected error", sys.exc_info()[0])
-        raise()
+        raise Exception()
 
 
 def output_reservations(reservations, config):
