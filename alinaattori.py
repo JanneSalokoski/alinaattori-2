@@ -41,10 +41,10 @@ class Logger:
         else:
             raise TypeError("loglevel must be of type Logger.LogLevel")
 
-    def log(self, message, loglevel=LogLevel.LOG):
+    def log(self, message, loglevel=LogLevel.LOG, start="", end=""):
         if isinstance(loglevel, self.LogLevel):
             if loglevel.value <= self.loglevel.value:
-                print("[{}]: {}".format(loglevel.name, message))
+                print("{}[{}] {}{}".format(start, loglevel.name, message, end))
 
         else:
             raise TypeError("loglevel must be of type Logger.LogLevel")
@@ -91,7 +91,7 @@ logger = Logger()
 
 def read_input(input_file):
     """Read a semicolon-delimitered csv input-file into a list"""
-    logger.log("Reading input from file '{}'".format(input_file))
+    logger.log("Reading input from file '{}'".format(input_file), start="\n")
 
     try:
         csv_reader = csv.DictReader(
@@ -102,9 +102,9 @@ def read_input(input_file):
 
         data_rows = []
         for row in csv_reader:
+            logger.log("Row: {}".format(row), Logger.LogLevel.DEBUG)
             data_rows.append(row)
 
-        logger.log("data_rows: {}".format(data_rows), Logger.LogLevel.DEBUG)
         return data_rows
 
     except FileNotFoundError:
@@ -121,16 +121,20 @@ def read_input(input_file):
 
 def process_raw_request_data(data):
     """Parse raw request data into a list of Request objects"""
+    logger.log("Processing raw request data", start="\n")
     requests = []
 
     for row in data:
-        requests.append(Request(
+        request = Request(
             row["organization"],
             row["email"],
             [row["1"], row["2"], row["3"]]
-        ))
+        )
 
-    logger.log("Requests: {}".format(requests), Logger.LogLevel.DEBUG)
+        logger.log("Request: {}".format(request), Logger.LogLevel.DEBUG)
+        requests.append(request)
+
+    #logger.log("Requests: {}".format(requests), Logger.LogLevel.DEBUG)
     return requests
 
 
@@ -151,8 +155,17 @@ def validate_date(date, reservations):
 
 def process_request(request, reservations):
     """Validate all dates of a request"""
+    logger.log(
+        "Processing organization '{}'".format(request.organization),
+        Logger.LogLevel.DEBUG,
+        start="\n"
+    )
     for date in request.dates:
         if validate_date(date, reservations):
+            logger.log("Reserved date '{}' for organization '{}'".format(
+                date,
+                request.organization
+            ))
             return Reservation(
                 request.organization,
                 True,
@@ -170,12 +183,62 @@ def process_request(request, reservations):
 
 def process_requests(requests):
     """Validate requests and return reservations"""
+    logger.log("Processing requests", start="\n")
     reservations = []
     for request in requests:
         reservations.append(process_request(request, reservations))
 
-    logger.log("Reservations: {}".format(reservations), Logger.LogLevel.DEBUG)
+    #logger.log("Reservations: {}".format(reservations), Logger.LogLevel.DEBUG)
     return reservations
+
+
+def print_stdout(reservations):
+    """Print output to stdout"""
+    logger.log("Reservations: ", start="\n")
+
+    for reservation in reservations:
+        logger.log("'{}': '{}'".format(
+            reservation.organization,
+            reservation.date
+        ))
+
+
+def print_file(reservations, config):
+    """Print succesfull reservations and failures into output file"""
+    logger.log(
+        "Printing output to file '{}'".format(config.output_file),
+        start="\n"
+    )
+
+    try:
+        with open(config.output_file, "w", newline="") as csvfile:
+            csvwriter = csv.writer(csvfile, delimiter=";")
+            csvwriter.writerow(["organization", "success", "date"])
+            for reservation in reservations:
+                csvwriter.writerow([
+                    reservation.organization,
+                    reservation.status,
+                    reservation.date
+                ])
+
+        csvfile.close()
+
+    except IOError:
+        logger.log(
+            "Can't open file: '{}'".format(config.output_file),
+            Logger.LogLevel.ERROR
+        )
+        sys.exit(1)
+
+    except:  # noqa: E722
+        print("Unexpected error", sys.exc_info()[0])
+        raise()
+
+
+def output_reservations(reservations, config):
+    """Print output to stdout and to the output file"""
+    print_stdout(reservations)
+    print_file(reservations, config)
 
 
 def main():
@@ -186,12 +249,13 @@ def main():
     # Initialize Logger with a LogLevel
     logger.loglevel = config.loglevel
 
-    logger.log("Starting Alinaattori 2.0")
+    logger.log("Starting Alinaattori 2.0", start="\n")
 
     raw_request_data = read_input(config.input_file)
     requests = process_raw_request_data(raw_request_data)
 
     reservations = process_requests(requests)
 
+    output_reservations(reservations, config)
 
 main()
