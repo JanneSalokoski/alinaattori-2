@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from logger import Logger
+from lib.logger import Logger
 
 import csv
 import sys
@@ -13,7 +13,9 @@ class Input:
 
     def read(self):
         """Read a semicolon-delimitered csv input-file into a list"""
-        self.logger.log("Reading input from file '{}'".format(self.config.input_file), start="\n")
+        self.logger.log("Reading input from file '{}'".format(
+            self.config.input_file
+        ), start="\n")
 
         try:
             csv_reader = csv.DictReader(

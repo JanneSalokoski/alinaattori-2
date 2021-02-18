@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 
-from logger import Logger
+from lib.logger import Logger
 
 import getopt
 import sys

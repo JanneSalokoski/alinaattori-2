@@ -3,12 +3,12 @@
 # Here we should have some very toplevel documentation about Alinaattori 2.0
 #
 
-from config import Config
-from logger import Logger
-from arguments import Arguments
-from input import Input
-from output import Output
-from requests import Requests
+from lib.config import Config
+from lib.logger import Logger
+from lib.arguments import Arguments
+from lib.input import Input
+from lib.output import Output
+from lib.requests import Requests
 
 import sys
 
