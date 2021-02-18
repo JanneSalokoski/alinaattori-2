@@ -32,14 +32,22 @@ class Output:
         )
 
         try:
-            with open(self.config.output_file, "w", newline="", encoding="utf-8-sig") as csvfile:
+            with open(
+                self.config.output_file,
+                    "w",
+                    newline="",
+                    encoding="utf-8-sig"
+                    ) as csvfile:
                 csvwriter = csv.writer(csvfile, delimiter=";", dialect="excel")
                 csvwriter.writerow(["organization", "success", "date"])
                 for reservation in reservations:
                     csvwriter.writerow([
                         reservation.organization,
                         reservation.status,
-                        datetime.strptime(reservation.date, self.config.date_in_format).strftime(self.config.date_out_format)
+                        datetime.strptime(
+                            reservation.date,
+                            self.config.date_in_format
+                        ).strftime(self.config.date_out_format)
                     ])
 
             csvfile.close()

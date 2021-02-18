@@ -127,7 +127,11 @@ EMAILS = [
 
 
 def getrandomdate():
-    return datetime(2021, random.randint(1, 4), random.randint(1, 28)).strftime("%d.%m.%Y")
+    return datetime(
+        2021,
+        random.randint(1, 4),
+        random.randint(1, 28)
+    ).strftime("%d.%m.%Y")
 
 
 def main():
@@ -137,7 +141,13 @@ def main():
 
         for i in range(0, len(ORGS)):
             print("{}: {} ({})".format(i, ORGS[i], EMAILS[i]))
-            csvwriter.writerow([ORGS[i], EMAILS[i], getrandomdate(), getrandomdate(), getrandomdate()])
+            csvwriter.writerow([
+                ORGS[i],
+                EMAILS[i],
+                getrandomdate(),
+                getrandomdate(),
+                getrandomdate()
+            ])
 
     csvfile.close()
 

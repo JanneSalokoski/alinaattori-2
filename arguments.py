@@ -35,7 +35,12 @@ Options:
         ]
 
         try:
-            arguments, values = getopt.getopt(argv, short_options, long_options)
+            arguments, values = getopt.getopt(
+                argv,
+                short_options,
+                long_options
+            )
+
         except getopt.error as err:
             self.logger.log(err, Logger.LogLevel.ERROR)
             sys.exit(1)
