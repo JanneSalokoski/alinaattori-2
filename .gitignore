@@ -1,2 +1,4 @@
 input.csv
 output.csv
+__pycache__/
+*.pyc
