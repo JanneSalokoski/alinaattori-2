@@ -20,6 +20,8 @@ Easiest way to acquire Alinaattori 2.0 is to clone this git-repository.
 $ git clone https://github.com/JanneSalokoski/alinaattori-2.git
 ```
 
+Or you can download the program from the [Releases-page](https://github.com/JanneSalokoski/alinaattori-2/releases). Download the archive and extract it into a directory you want to use Alinaattori 2.0 from.
+
 Now you can run Alinaattori 2.0 from the command line. You can test your installation by running this command:
 
 ```
@@ -39,6 +41,8 @@ Alinaattori 2.0 is a python program you run using a command-line-interface. On W
 ##### Input data
 
 This file you will probably output from Lyyti, with some modifications. Generate a report consisting of organization name, contact-email, request one, two and three. Open the report in excel. Change the header rows into 'organization', 'email', '1', '2' and '3' respectively. Save the file as UTF-8 encoded CSV file `input.csv`. This option should be the first .csv-option in Excels file-type selection. 
+
+You can also run `dev/generate_input.py` in order to generate some sample data for testing.
 
 ##### Email template
 
