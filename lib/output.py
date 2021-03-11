@@ -6,6 +6,8 @@ from datetime import datetime
 
 import csv
 import sys
+import glob
+import os
 
 
 class Output:
@@ -94,6 +96,25 @@ class Output:
             print("Unexpected error", sys.exc_info()[0])
             raise Exception()
 
+    def purge_email_directory(self):
+        """Remove all files from ./emails/"""
+        self.logger.log("Purging files from './email/'",)
+
+        try:
+            for file in glob.glob("./email/*"):
+                os.remove(file)
+
+        except IOError:
+            self.logger.log(
+                "Can't open file: '{}'".format(self.config.output_file),
+                Logger.LogLevel.ERROR
+            )
+            sys.exit(1)
+
+        except:  # noqa: E722
+            print("Unexpected error", sys.exc_info()[0])
+            raise Exception()
+
     def write_email(self, reservation, template):
         """Print email for organization"""
         self.logger.log(
@@ -125,5 +146,9 @@ class Output:
     def email(self, reservations):
         """Print emails for organizations"""
         template = self.read_email_template()
+
+        self.purge_email_directory()
+
         for reservation in reservations:
-            self.write_email(reservation, template)
+            if (reservation.status):
+                self.write_email(reservation, template)
