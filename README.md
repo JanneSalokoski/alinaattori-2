@@ -17,7 +17,7 @@ While a program for viewing .csv-files is not strictly necessary for using Alina
 Easiest way to acquire Alinaattori 2.0 is to clone this git-repository.
 
 ```
-$ git clone https://github.com/JanneSalokoski/alinaattori-2-0.git
+$ git clone https://github.com/JanneSalokoski/alinaattori-2.git
 ```
 
 Now you can run Alinaattori 2.0 from the command line. You can test your installation by running this command:
@@ -80,4 +80,4 @@ Alinaattori 2.0 is based on Alinaattori, a software written for the same purpose
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE.md file for details
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/JanneSalokoski/alinaattori-2/blob/main/LICENSE.md) file for details
