@@ -13,11 +13,15 @@ class Output:
         self.config = config
         self.logger = logger
 
+    def sort(self, reservations):
+        """Sort reservations alphabetically"""
+        return sorted(reservations, key=lambda i: i.organization)
+
     def stdout(self, reservations):
         """Print output to stdout"""
         self.logger.log("Reservations: ", start="\n")
 
-        for reservation in reservations:
+        for reservation in self.sort(reservations):
             self.logger.log("'{}': '{}' -> {}".format(
                 reservation.organization,
                 reservation.date,
@@ -40,7 +44,7 @@ class Output:
                     ) as csvfile:
                 csvwriter = csv.writer(csvfile, delimiter=";", dialect="excel")
                 csvwriter.writerow(["organization", "success", "date"])
-                for reservation in reservations:
+                for reservation in self.sort(reservations):
                     csvwriter.writerow([
                         reservation.organization,
                         reservation.status,
