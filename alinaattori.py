@@ -1,6 +1,13 @@
 #!/usr/bin/env python
 #
-# Here we should have some very toplevel documentation about Alinaattori 2.0
+# Alinaattori 2.0 is a tool made for handling reservations of Alina-sali,
+# a ballroom organizations operating under HYY, the Student Union of the
+# University of Helsinki.
+#
+# Alinaattori reads a csv-file of organizations, contact-email-addresses
+# and requested dates. It checks for incompatibilities and shares reservations
+# fairly. Alinaattori outputs a csv file with information about the requests.
+# Alinaattori can also output emails to be sent to the organizations
 #
 
 from lib.config import Config
