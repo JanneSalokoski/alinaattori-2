@@ -1,4 +1,6 @@
 input.csv
 output.csv
+email_template.txt
+email/
 __pycache__/
 *.pyc

@@ -20,6 +20,7 @@ def main():
     config = Config(
         arguments["input_file"],
         arguments["output_file"],
+        arguments["email_template"],
         arguments["date_in_format"],
         arguments["date_out_format"],
         arguments["loglevel"]
@@ -40,6 +41,7 @@ def main():
     writer = Output(config, logger)
     writer.stdout(reservations)
     writer.file(reservations)
+    writer.email(reservations)
 
     logger.log("Program finished succesfully", start="\n", end="\n")
 

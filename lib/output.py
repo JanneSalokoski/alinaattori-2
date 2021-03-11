@@ -66,3 +66,64 @@ class Output:
         except:  # noqa: E722
             print("Unexpected error", sys.exc_info()[0])
             raise Exception()
+
+    def read_email_template(self):
+        """Read email template"""
+        try:
+            self.logger.log(
+                "Reading email template from file: '{}'"
+                .format("template.txt"),
+                start="\n"
+            )
+
+            with open(
+                self.config.email_template,
+                "r",
+                encoding="utf-8-sig"
+            ) as template_file:
+                return template_file.read()
+
+        except IOError:
+            self.logger.log(
+                "Can't open file: '{}'".format(self.config.output_file),
+                Logger.LogLevel.ERROR
+            )
+            sys.exit(1)
+
+        except:  # noqa: E722
+            print("Unexpected error", sys.exc_info()[0])
+            raise Exception()
+
+    def write_email(self, reservation, template):
+        """Print email for organization"""
+        self.logger.log(
+            "Writing file: './email/{}.txt'".format(reservation.email),
+            Logger.LogLevel.DEBUG
+        )
+
+        try:
+            with open(
+                "email/{}.txt".format(reservation.email),
+                "w+"
+            ) as email_file:
+                email_file.write(template.format(
+                    organization=reservation.organization,
+                    date=reservation.date
+                ))
+
+        except IOError:
+            self.logger.log(
+                "Can't open file: '{}'".format(self.config.output_file),
+                Logger.LogLevel.ERROR
+            )
+            sys.exit(1)
+
+        except:  # noqa: E722
+            print("Unexpected error", sys.exc_info()[0])
+            raise Exception()
+
+    def email(self, reservations):
+        """Print emails for organizations"""
+        template = self.read_email_template()
+        for reservation in reservations:
+            self.write_email(reservation, template)
