@@ -57,10 +57,11 @@ class Requests:
                 [row["1"], row["2"], row["3"]]
             )
 
-            self.logger.log("Request: {}".format(request), Logger.LogLevel.DEBUG)
+            self.logger.log("Request: {}"
+                .format(request), Logger.LogLevel.DEBUG  # noqa: E128
+            )
             requests.append(request)
 
-        #logger.log("Requests: {}".format(requests), Logger.LogLevel.DEBUG)
         return requests
 
     def validate_date(self, date, reservations):
@@ -91,10 +92,12 @@ class Requests:
         )
         for date in request.dates:
             if self.validate_date(date, reservations):
-                self.logger.log("Reserved date '{}' for organization '{}'".format(
-                    date,
-                    request.organization
-                ))
+                self.logger.log("Reserved date '{}' for organization '{}'"
+                    .format(  # noqa: E128
+                        date,
+                        request.organization
+                    )
+                )
                 return Reservation(
                     request.organization,
                     True,
@@ -119,5 +122,4 @@ class Requests:
         for request in requests:
             reservations.append(self.process_request(request, reservations))
 
-        #logger.log("Reservations: {}".format(reservations), Logger.LogLevel.DEBUG)
         return reservations
