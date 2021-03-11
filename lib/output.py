@@ -74,7 +74,7 @@ class Output:
         try:
             self.logger.log(
                 "Reading email template from file: '{}'"
-                .format("template.txt"),
+                .format(self.config.email_template),
                 start="\n"
             )
 
@@ -87,7 +87,7 @@ class Output:
 
         except IOError:
             self.logger.log(
-                "Can't open file: '{}'".format(self.config.output_file),
+                "Can't open file: '{}'".format(self.config.email_template),
                 Logger.LogLevel.ERROR
             )
             sys.exit(1)
@@ -98,15 +98,18 @@ class Output:
 
     def purge_email_directory(self):
         """Remove all files from ./emails/"""
-        self.logger.log("Purging files from './email/'",)
+        self.logger.log("Purging files from '{}'".format(
+            self.config.email_directory))
 
         try:
-            for file in glob.glob("./email/*"):
+            for file in glob.glob("{}*".format(self.config.email_directory)):
                 os.remove(file)
 
         except IOError:
             self.logger.log(
-                "Can't open file: '{}'".format(self.config.output_file),
+                "Can't open directory: '{}'".format(
+                    self.config.email_directory
+                ),
                 Logger.LogLevel.ERROR
             )
             sys.exit(1)
@@ -118,13 +121,19 @@ class Output:
     def write_email(self, reservation, template):
         """Print email for organization"""
         self.logger.log(
-            "Writing file: './email/{}.txt'".format(reservation.email),
+            "Writing file: '{}{}.txt'".format(
+                self.config.email_directory,
+                reservation.email
+            ),
             Logger.LogLevel.DEBUG
         )
 
         try:
             with open(
-                "email/{}.txt".format(reservation.email),
+                "{}/{}.txt".format(
+                    self.config.email_directory,
+                    reservation.email
+                ),
                 "w+"
             ) as email_file:
                 email_file.write(template.format(
@@ -147,8 +156,16 @@ class Output:
         """Print emails for organizations"""
         template = self.read_email_template()
 
-        self.purge_email_directory()
+        if (not self.config.no_purge):
+            self.purge_email_directory()
 
-        for reservation in reservations:
-            if (reservation.status):
-                self.write_email(reservation, template)
+        if (not self.config.no_email):
+            self.logger.log(
+                "Writing emails into directory: '{}'".format(
+                    self.config.email_directory,
+                ),
+                start="\n"
+            )
+            for reservation in reservations:
+                if (reservation.status):
+                    self.write_email(reservation, template)
