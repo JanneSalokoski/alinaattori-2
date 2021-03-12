@@ -45,10 +45,11 @@ class Output:
                     encoding="utf-8-sig"
                     ) as csvfile:
                 csvwriter = csv.writer(csvfile, delimiter=";", dialect="excel")
-                csvwriter.writerow(["organization", "success", "date"])
+                csvwriter.writerow(["organization", "event", "success", "date"])
                 for reservation in self.sort(reservations):
                     csvwriter.writerow([
                         reservation.organization,
+                        reservation.event,
                         reservation.status,
                         datetime.strptime(
                             reservation.date,

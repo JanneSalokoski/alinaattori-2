@@ -60,6 +60,11 @@ def getrandomdate():
     ).strftime("%d.%m.%Y")
 
 
+def geteventtype():
+    types = ["sitsit", "bileet"]
+    return types[random.randint(0, 1)]
+
+
 def main():
     with open("input.csv", "w", newline="", encoding="utf-8-sig") as csvfile:
         csvwriter = csv.writer(csvfile, delimiter=";", dialect="excel")
@@ -69,6 +74,7 @@ def main():
             print("{}: {} ({})".format(i, ORGS[i], EMAILS[i]))
             csvwriter.writerow([
                 ORGS[i],
+                geteventtype(),
                 EMAILS[i],
                 getrandomdate(),
                 getrandomdate(),

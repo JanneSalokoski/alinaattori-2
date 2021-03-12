@@ -8,14 +8,16 @@ import random
 class Request:
     """Create a data-structure for handling requests"""
 
-    def __init__(self, organization, email, dates):
+    def __init__(self, organization, event, email, dates):
         self.organization = organization
+        self.event = event
         self.email = email
         self.dates = dates
 
     def __repr__(self):
-        return "organization: '{}', email: '{}', dates: '{}'".format(
+        return "organization: '{}', event: '{}', email: '{}', dates: '{}'".format(
             self.organization,
+            self.event,
             self.email,
             self.dates
         )
@@ -24,16 +26,18 @@ class Request:
 class Reservation:
     """Create a data-structure for handling reservations"""
 
-    def __init__(self, organization, status, email, date):
+    def __init__(self, organization, event, status, email, date):
         self.organization = organization
+        self.event = event
         self.status = status
         self.email = email
         self.date = date
 
     def __repr__(self):
-        return ("organization: '{}', status: '{}' " +
+        return ("organization: '{}', event: '{}', status: '{}' " +
                 "email: '{}', date: '{}'").format(
                     self.organization,
+                    self.event,
                     "Ok" if self.status is True else "Failed",
                     self.email,
                     self.date
@@ -53,6 +57,7 @@ class Requests:
         for row in data:
             request = Request(
                 row["organization"],
+                row["event"],
                 row["email"],
                 [row["1"], row["2"], row["3"]]
             )
@@ -100,6 +105,7 @@ class Requests:
                 )
                 return Reservation(
                     request.organization,
+                    request.event,
                     True,
                     request.email,
                     date
@@ -107,6 +113,7 @@ class Requests:
 
         return Reservation(
             request.organization,
+            request.event,
             False,
             request.email,
             "1.1.1970"
